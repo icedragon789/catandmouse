@@ -1,0 +1,346 @@
+title Cat and Mouse
+author Ben Placzek
+homepage www.puzzlescript.net
+
+realtime_interval 0.3
+
+========
+OBJECTS
+========
+
+Background 
+RED 
+
+
+Cheese
+Yellow Orange
+.....
+.0000
+01001
+00100
+01010
+
+Crumb
+Yellow Orange
+.....
+.....
+.....
+.0...
+.101.
+
+Wall 
+#654321 #d2b48c
+00000
+11111
+00000
+11111
+00000
+
+Window
+#654321 #d2b48c White #00ffff
+00000
+03330
+03330
+03330
+00000
+
+Player 
+Gray Pink Black
+.1...
+1....
+1.00.
+.0020
+.000.
+
+Mouse
+Gray Pink Black
+.1...
+1....
+1.00.
+.0020
+.000.
+
+Cat0
+Blue Black
+0.0.0
+0.101
+0.000
+.0000
+.0..0
+
+FatCat0
+Blue Black
+0.0.0
+0.101
+00000
+00000
+.0..0
+
+Cat1
+Purple Black
+0.0.0
+0.101
+0.000
+.0000
+.0..0
+
+FatCat1
+Purple Black
+0.0.0
+0.101
+00000
+00000
+.0..0
+
+
+Dead
+#dc143c
+.....
+000..
+.000.
+0000.
+.0000
+
+Hole
+#654321 #d2b48c Black
+00222
+12222
+02222
+12222
+00222
+
+InvertHole
+#654321 #d2b48c Black
+22200
+22221
+22220
+22221
+22200
+
+ForwardHole
+#654321 #d2b48c Black
+01010
+02220
+22222
+22222
+22222
+
+
+Crate 
+Orange 
+00000
+000.0
+00.00
+0.000
+00000
+
+Outside
+Green Yellow
+00010
+10100
+00010
+01001
+00000
+
+Catx
+RED
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+c = Cheese
+! = Window
+n = Hole
+o = Outside
+m = Mouse
+i = InvertHole
+? = Catx
+f = ForwardHole
+
+TheCat = Cat0 or Cat1
+
+=======
+SOUNDS
+=======
+Crate MOVE 80587307
+Player MOVE 91487704
+sfx0 43682102
+sfx1 78646305
+EndLevel 76587508   
+================
+COLLISIONLAYERS
+================
+
+Background
+Cheese, Crumb, Dead, Catx, Outside
+Player, Wall, Window, Cat0, Cat1, FatCat0, FatCat1, Crate, Hole, ForwardHole, InvertHole, Mouse
+
+======
+RULES     
+======     
+
+[ Catx ] -> [ random TheCat ]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]  (player pushes crate)
+[ stationary Mouse] -> [randomdir Mouse] (mice run around randomly in comparisson to other mice)
+[ stationary Cat0] -> [randomdir Cat0] (cat run around randomly in comparisson to other mice)
+[ stationary Cat1] -> [randomdir Cat1] (other cat run around randomly in comparisson to other mice)
+
+
+( Mouse can be pushed)
+[ > Crate | Mouse ] -> [ > Crate | > Mouse]
+
+
+(mouse tracking code)
+[ stationary Mouse | | Cheese ] -> [ > Mouse | | Cheese ]
+[ stationary Mouse | | | Cheese ] -> [ > Mouse | | | Cheese ]
+[ stationary Mouse | | | | Cheese ] -> [ > Mouse | | | | Cheese ]
+[ stationary Mouse | | | | | Cheese ] -> [ > Mouse | | | | | Cheese ]
+[ stationary Mouse | | | | | | Cheese ] -> [ > Mouse | | | | | | Cheese ]
+
+(cat tracking code)
+[ stationary Cat0 | Player ] -> [ > Cat0 | Dead] sfx0
+[ stationary Cat0 | | Mouse ] -> [ > Cat0 | | > Mouse ]
+[ stationary Cat0 | | Player ] -> [ > Cat0 | | > Player ]
+[ stationary Cat0 | | | Mouse ] -> [ > Cat0 | | | > Mouse ]
+[ stationary Cat0 | | | Player ] -> [> Cat0 | | | > Player ]
+[ stationary Cat0 | | | | Player ] -> [ > Cat0 | | | | > Player ]
+[ stationary Cat0 | | | | Mouse ] -> [ > Cat0 | | | | > Mouse ]
+(account for other cat)
+[ stationary Cat1 | Player ] -> [ > Cat1 | Dead] sfx0
+[ stationary Cat1 | | Mouse ] -> [ > Cat1 | | > Mouse ]
+[ stationary Cat1 | | Player ] -> [ > Cat1 | | > Player ]
+[ stationary Cat1 | | | Mouse ] -> [ > Cat1 | | | > Mouse ]
+[ stationary Cat1 | | | Player ] -> [> Cat1 | | | > Player ]
+[ stationary Cat1 | | | | Player ] -> [ > Cat1 | | | | > Player ]
+[ stationary Cat1 | | | | Mouse ] -> [ > Cat1 | | | | > Mouse ]
+
+
+
+(mice eat cheese)
+[ Mouse | Cheese ] -> [ > Mouse | Crumb] sfx0
+
+(cats eat mice)
+[ Cat0 | Mouse ] -> [ > Cat0 | Dead] sfx1
+(cats eat you)
+[ Cat0 | Player ] -> [ > FatCat0 | Dead] sfx1
+(cats eat mice)
+[ Cat1 | Mouse ] -> [ > Cat1 | Dead] sfx1
+(cats eat you)
+[ Cat1 | Player ] -> [ > FatCat1 | Dead] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+any Player on Cheese 
+
+=======     
+LEVELS
+=======
+
+message Ooh! Some cheese!
+
+#########
+##f###f##
+#...*..?#
+#...*...#
+np..*.c.i
+#...*...#
+#...*...#
+#########
+
+message Get dat Cheese.
+
+#!!#f##f##f##f#!!#
+#!!#m##.##.##m#!!#
+####.##m##m##.####
+np..*..*..*..*..ci
+#...*..*..*..*...#
+##################
+
+message Cheeeeese!!
+
+##########f#######f##
+#*...*..#m......*...#
+#...*#....*.....#.*.#
+np...#*.#....m......#
+#....#######.....c..#
+#....*..#.?..*......i
+#####################
+
+
+message You. Need. Cheese.
+
+##f###f###f###f##
+nP.............c#
+#...*..mmm..*...#
+#...*..m.m..*...i
+#...*..m.m..*...#
+#..............c#
+#################
+
+message Think Smart!
+
+#################
+###f####f####f###
+#.m..#.*...#mm?m#
+#..#.#.#***#mmmm#
+#.*#.*.#..m#mmmm#
+##.#.*m*...######
+np.#...*.......ci
+#################
+
+message Must get the Cheese!
+
+#f#f#########f#f#
+#cmmmmmmcm.c...c#
+#m?mcmmmmm....?.#
+###*##*###*##*###
+np..............#
+#################
+
+message You're almost there. You can smell the final cheese in the next room.
+########
+ncccccci
+#.....m#
+#******#
+nmp..mmi
+#*****m#
+#m.....#
+nccccc?i
+########
+
+message The Cats are Getting Full... This is the final cheese!
+#!!##!!!!#!!#
+#!!##!!!!#!!#
+##f#####f####
+#pp.*m.*p*p*#
+#p.*?p.*p*pp#
+n.*.?m.*pp**#
+#*..?p..*ppp#
+#...?m...***i
+#*..?mmmpmpm#
+n.*.?.......#
+#p.*????????#
+#pp.*......ci
+
+
+message You made it. After so many casualties, you retreat from the premeses. 
+
+#!!!#####!
+#!!!#####!
+######f###
+ooooo.c.oo
+oooooooooo
+oooooooooo
+oooooooooo
+oooooooooo
+o.p.oooooo
+
+message You win!
